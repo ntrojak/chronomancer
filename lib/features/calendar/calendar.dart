@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'package:chronomancer/features/calendar/event_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:chronomancer/core/domain/event.dart';
@@ -144,27 +145,7 @@ class _CalendarState extends State<Calendar> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          showModalBottomSheet<void>(
-            context: context,
-            // sheetAnimationStyle: _animationStyle,
-            builder: (BuildContext context) {
-              return SizedBox.expand(
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      const Text('Modal bottom sheet'),
-                      ElevatedButton(
-                        child: const Text('Close'),
-                        onPressed: () => Navigator.pop(context),
-                      ),
-                    ],
-                  ),
-                ),
-              );
-            },
-          );
+          showDialog(context: context, builder: (context) => EventDialog());
         },
         foregroundColor: Colors.purple,
         backgroundColor: Colors.blueGrey,
