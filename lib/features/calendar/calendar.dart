@@ -147,7 +147,11 @@ class _CalendarState extends State<Calendar> {
         onPressed: () {
           showDialog(
             context: context,
-            builder: (context) => EventDialog(date: _selectedDay),
+            builder: (context) {
+              return _selectedDay != null
+                  ? EventDialog(startDate: _selectedDay)
+                  : EventDialog(startDate: _rangeStart, endDate: _rangeEnd);
+            },
           );
         },
         foregroundColor: Colors.purple,
@@ -159,7 +163,7 @@ class _CalendarState extends State<Calendar> {
   }
 }
 
-// TODO: Left no as not to throw errors. Remove when unnecessary
+// TODO: Left so as not to throw errors. Remove when unnecessary
 final kEvents = LinkedHashMap<DateTime, List<Event>>(equals: isSameDay);
 final kToday = DateTime.now();
 final kFirstDay = DateTime(kToday.year, kToday.month - 3, kToday.day);

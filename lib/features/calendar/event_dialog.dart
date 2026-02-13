@@ -2,18 +2,23 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class EventDialog extends StatefulWidget {
-  final DateTime? date;
+  final DateTime? startDate;
+  final DateTime? endDate;
 
-  const EventDialog({this.date, super.key});
+  const EventDialog({this.startDate, this.endDate, super.key});
 
   @override
   State<EventDialog> createState() => _EventDialogState();
 }
 
 class _EventDialogState extends State<EventDialog> {
-  late DateTime selectedDate;
+  DateTime startDate = DateTime.now();
+  DateTime endDate = DateTime.now();
 
-  Future<void> _selectDate(BuildContext context) async {
+  Future<void> _selectDate(
+    BuildContext context,
+    void Function(DateTime) onDateSelected,
+  ) async {
     final DateTime? date = await showDatePicker(
       context: context,
       initialDate: DateUtils.dateOnly(DateTime.now()),
@@ -23,7 +28,7 @@ class _EventDialogState extends State<EventDialog> {
 
     setState(() {
       if (date != null) {
-        selectedDate = DateUtils.dateOnly(date);
+        onDateSelected(date);
       }
     });
   }
@@ -32,7 +37,8 @@ class _EventDialogState extends State<EventDialog> {
   void initState() {
     super.initState();
 
-    selectedDate = widget.date ?? DateTime.now();
+    startDate = widget.startDate ?? DateTime.now();
+    endDate = widget.endDate ?? startDate;
   }
 
   @override
@@ -43,10 +49,20 @@ class _EventDialogState extends State<EventDialog> {
           TextField(decoration: InputDecoration(hintText: 'Event name')),
           OutlinedButton(
             onPressed: () {
-              _selectDate(context);
-              // TODO: Finish the dialog
+              _selectDate(context, (date) {
+                startDate = date;
+              });
             },
-            child: Text(DateFormat('dd-MM-yyyy').format(selectedDate)),
+            // TODO: Move DateTime formatting to separate, static class and add locale and timezone handling
+            child: Text(DateFormat('dd-MM-yyyy').format(startDate)),
+          ),
+          OutlinedButton(
+            onPressed: () {
+              _selectDate(context, (date) {
+                endDate = date;
+              });
+            },
+            child: Text(DateFormat('dd-MM-yyyy').format(endDate)),
           ),
         ],
       ),
