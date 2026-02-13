@@ -145,7 +145,10 @@ class _CalendarState extends State<Calendar> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          showDialog(context: context, builder: (context) => EventDialog());
+          showDialog(
+            context: context,
+            builder: (context) => EventDialog(date: _selectedDay),
+          );
         },
         foregroundColor: Colors.purple,
         backgroundColor: Colors.blueGrey,

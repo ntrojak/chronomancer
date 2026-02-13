@@ -1,27 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class EventDialog extends StatefulWidget {
-  const EventDialog({super.key});
+  final DateTime? date;
+
+  const EventDialog({this.date, super.key});
 
   @override
   State<EventDialog> createState() => _EventDialogState();
 }
 
 class _EventDialogState extends State<EventDialog> {
-  DateTime? selectedDate;
+  late DateTime selectedDate;
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? date = await showDatePicker(
-      // TODO: Inject day selected in calendar view
       context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime.now(),
-      lastDate: DateTime(DateTime.now().year + 30),
+      initialDate: DateUtils.dateOnly(DateTime.now()),
+      firstDate: DateUtils.dateOnly(DateTime.now()),
+      lastDate: DateUtils.dateOnly(DateTime(DateTime.now().year + 30)),
     );
 
     setState(() {
-      selectedDate = date;
+      if (date != null) {
+        selectedDate = DateUtils.dateOnly(date);
+      }
     });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+
+    selectedDate = widget.date ?? DateTime.now();
   }
 
   @override
@@ -35,7 +46,7 @@ class _EventDialogState extends State<EventDialog> {
               _selectDate(context);
               // TODO: Finish the dialog
             },
-            child: Text(DateTime.now().toString()),
+            child: Text(DateFormat('dd-MM-yyyy').format(selectedDate)),
           ),
         ],
       ),
