@@ -1,7 +1,7 @@
 import 'frequency.dart';
 
 class Event {
-  final int _id;
+  final int id;
   final DateTime createdAt;
 
   String title;
@@ -13,13 +13,13 @@ class Event {
 
   DateTime? get endTime => finishTime ?? startTime;
 
-  Event({required this.title})
-    : _id = DateTime.now().toUtc().millisecondsSinceEpoch,
+  Event({required this.title, this.startTime, this.finishTime})
+    : id = DateTime.now().toUtc().millisecondsSinceEpoch,
       createdAt = DateTime.now().toUtc();
 
   @override
   String toString() {
-    return "${_id.toString()} $title";
+    return "${id.toString()} $title";
   }
 
   bool isTodo() => startTime == null;

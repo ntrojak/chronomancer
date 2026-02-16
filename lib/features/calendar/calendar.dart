@@ -1,4 +1,5 @@
 import 'dart:collection';
+import 'package:chronomancer/core/repositories/in_memory_event_repository.dart';
 import 'package:chronomancer/features/calendar/event_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -19,6 +20,7 @@ class _CalendarState extends State<Calendar> {
   DateTime? _selectedDay;
   DateTime? _rangeStart;
   DateTime? _rangeEnd;
+  InMemoryEventRepository _eventRepository = InMemoryEventRepository();
 
   @override
   void initState() {
@@ -95,7 +97,8 @@ class _CalendarState extends State<Calendar> {
             rangeEndDay: _rangeEnd,
             calendarFormat: _calendarFormat,
             rangeSelectionMode: _rangeSelectionMode,
-            eventLoader: _getEventsForDay,
+            // eventLoader: _getEventsForDay,
+            eventLoader: _eventRepository.getEventsByDate,
             startingDayOfWeek: StartingDayOfWeek.monday,
             calendarStyle: const CalendarStyle(
               // Use `CalendarStyle` to customize the UI
@@ -149,8 +152,15 @@ class _CalendarState extends State<Calendar> {
             context: context,
             builder: (context) {
               return _selectedDay != null
-                  ? EventDialog(startDate: _selectedDay)
-                  : EventDialog(startDate: _rangeStart, endDate: _rangeEnd);
+                  ? EventDialog(
+                      eventRepository: _eventRepository,
+                      startDate: _selectedDay,
+                    )
+                  : EventDialog(
+                      eventRepository: _eventRepository,
+                      startDate: _rangeStart,
+                      endDate: _rangeEnd,
+                    );
             },
           );
         },

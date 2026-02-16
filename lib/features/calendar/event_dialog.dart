@@ -1,11 +1,19 @@
+import 'package:chronomancer/core/domain/event.dart';
+import 'package:chronomancer/core/repositories/in_memory_event_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class EventDialog extends StatefulWidget {
   final DateTime? startDate;
   final DateTime? endDate;
+  final InMemoryEventRepository eventRepository;
 
-  const EventDialog({this.startDate, this.endDate, super.key});
+  const EventDialog({
+    required this.eventRepository,
+    this.startDate,
+    this.endDate,
+    super.key,
+  });
 
   @override
   State<EventDialog> createState() => _EventDialogState();
@@ -14,6 +22,7 @@ class EventDialog extends StatefulWidget {
 class _EventDialogState extends State<EventDialog> {
   DateTime startDate = DateTime.now();
   DateTime endDate = DateTime.now();
+  late InMemoryEventRepository _eventRepository;
 
   Future<void> _selectDate(
     BuildContext context,
@@ -37,6 +46,7 @@ class _EventDialogState extends State<EventDialog> {
   void initState() {
     super.initState();
 
+    _eventRepository = widget.eventRepository;
     startDate = widget.startDate ?? DateTime.now();
     endDate = widget.endDate ?? startDate;
   }
@@ -64,6 +74,15 @@ class _EventDialogState extends State<EventDialog> {
             },
             child: Text(DateFormat('dd-MM-yyyy').format(endDate)),
           ),
+          OutlinedButton(
+            onPressed: () {
+              _eventRepository.addEvent(
+                Event(title: "Test", startTime: startDate, finishTime: endDate),
+              );
+            },
+            child: Text("Add"),
+          ),
+          OutlinedButton(onPressed: () {}, child: Text("Cancel")),
         ],
       ),
     );
