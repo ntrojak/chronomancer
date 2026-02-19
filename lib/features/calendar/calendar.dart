@@ -1,9 +1,12 @@
-import 'dart:collection';
 import 'package:chronomancer/core/repositories/in_memory_event_repository.dart';
 import 'package:chronomancer/features/calendar/event_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:chronomancer/core/domain/event.dart';
+
+final today = DateTime.now();
+final firstDay = DateTime(today.year, today.month - 3, today.day);
+final lastDay = DateTime(today.year, today.month + 3, today.day);
 
 class Calendar extends StatefulWidget {
   const Calendar({super.key});
@@ -14,13 +17,13 @@ class Calendar extends StatefulWidget {
 
 class _CalendarState extends State<Calendar> {
   late final ValueNotifier<List<Event>> _selectedEvents;
+  final InMemoryEventRepository _eventRepository = InMemoryEventRepository();
   CalendarFormat _calendarFormat = CalendarFormat.month;
   RangeSelectionMode _rangeSelectionMode = RangeSelectionMode.toggledOff;
   DateTime _focusedDay = DateTime.now();
   DateTime? _selectedDay;
   DateTime? _rangeStart;
   DateTime? _rangeEnd;
-  InMemoryEventRepository _eventRepository = InMemoryEventRepository();
 
   @override
   void initState() {
@@ -37,8 +40,7 @@ class _CalendarState extends State<Calendar> {
   }
 
   List<Event> _getEventsForDay(DateTime day) {
-    // Implementation example
-    return kEvents[day] ?? [];
+    return _eventRepository.getEventsByDate(day);
   }
 
   List<Event> _getEventsForRange(DateTime start, DateTime end) {
@@ -89,8 +91,8 @@ class _CalendarState extends State<Calendar> {
       body: Column(
         children: [
           TableCalendar<Event>(
-            firstDay: kFirstDay,
-            lastDay: kLastDay,
+            firstDay: firstDay,
+            lastDay: lastDay,
             focusedDay: _focusedDay,
             selectedDayPredicate: (day) => isSameDay(_selectedDay, day),
             rangeStartDay: _rangeStart,
@@ -172,9 +174,3 @@ class _CalendarState extends State<Calendar> {
     );
   }
 }
-
-// TODO: Left so as not to throw errors. Remove when unnecessary
-final kEvents = LinkedHashMap<DateTime, List<Event>>(equals: isSameDay);
-final kToday = DateTime.now();
-final kFirstDay = DateTime(kToday.year, kToday.month - 3, kToday.day);
-final kLastDay = DateTime(kToday.year, kToday.month + 3, kToday.day);

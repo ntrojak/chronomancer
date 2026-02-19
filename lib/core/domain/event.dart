@@ -19,7 +19,7 @@ class Event {
 
   @override
   String toString() {
-    return "${id.toString()} $title";
+    return title;
   }
 
   bool isTodo() => startTime == null;

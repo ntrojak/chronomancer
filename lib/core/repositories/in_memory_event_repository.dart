@@ -11,16 +11,16 @@ class InMemoryEventRepository {
   }
 
   void addEvent(Event event) {
-    var key = createEventKey(event.startTime);
+    var key = _createEventKey(event.startTime);
     _events.putIfAbsent(key, () => []).add(event);
   }
 
   void deleteEvent(Event event) {
-    var key = createEventKey(event.startTime);
+    var key = _createEventKey(event.startTime);
     _events[key]?.removeWhere((item) => item.id == event.id);
   }
 
-  DateTime createEventKey(DateTime? startTime) {
+  DateTime _createEventKey(DateTime? startTime) {
     if (startTime != null) {
       return DateTime(startTime.year, startTime.month, startTime.day);
     }
