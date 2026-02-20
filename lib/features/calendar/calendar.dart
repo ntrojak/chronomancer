@@ -44,9 +44,11 @@ class _CalendarState extends State<Calendar> {
   }
 
   List<Event> _getEventsForRange(DateTime start, DateTime end) {
-    // Implementation example
-    final days = <DateTime>[];
-    // final days = daysInRange(start, end);
+    final dayCount = end.difference(start).inDays + 1;
+    final days = List.generate(
+      dayCount,
+      (index) => DateTime.utc(start.year, start.month, start.day + index),
+    );
 
     return [for (final d in days) ..._getEventsForDay(d)];
   }
@@ -136,10 +138,7 @@ class _CalendarState extends State<Calendar> {
                         border: Border.all(),
                         borderRadius: BorderRadius.circular(12.0),
                       ),
-                      child: ListTile(
-                        onTap: () => print('${value[index]}'),
-                        title: Text('${value[index]}'),
-                      ),
+                      child: ListTile(title: Text('${value[index]}')),
                     );
                   },
                 );
