@@ -79,10 +79,16 @@ class _EventDialogState extends State<EventDialog> {
               _eventRepository.addEvent(
                 Event(title: "Test", startTime: startDate, finishTime: endDate),
               );
+              Navigator.pop(context);
             },
             child: Text("Add"),
           ),
-          OutlinedButton(onPressed: () {}, child: Text("Cancel")),
+          OutlinedButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text("Cancel"),
+          ),
         ],
       ),
     );
